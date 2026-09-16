@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kevin Li — Now</title>
+    <meta name="description" content="Kevin Li — two-time YC founder building jo. Brown belt judoka. Alameda, CA.">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Kevin Li — Now">
+    <meta property="og:description" content="Two-time YC founder building jo. Brown belt judoka training for black belt. Alameda, CA.">
+    <meta property="og:image" content="https://liveink.md/og.png">
+    <meta property="og:url" content="https://liveink.md">
+    <meta property="og:type" content="website">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Kevin Li — Now">
+    <meta name="twitter:description" content="Two-time YC founder building jo. Brown belt judoka training for black belt. Alameda, CA.">
+    <meta name="twitter:image" content="https://liveink.md/og.png">
+    <meta name="twitter:site" content="@liveink">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #0a0a0a;
+            --bg-subtle: #151515;
+            --text: #e8e8e8;
+            --text-dim: #999;
+            --accent: #00d4aa;
+            --accent-dim: #008866;
+            --neon-pink: #ff2d78;
+        }
+
+        ::selection {
+            background: var(--neon-pink);
+            color: #0a0a0a;
+        }
+
+        body {
+            background: var(--bg);
+            background-image: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(0, 212, 170, 0.07), transparent);
+            color: var(--text);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-weight: 300;
+            line-height: 1.7;
+            font-size: 17px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* subtle CRT scanlines */
+        body::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.16) 0 1px, transparent 1px 3px);
+            opacity: 0.35;
+            z-index: 50;
+        }
+
+        .container {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 32px 24px 60px;
+        }
+
+        /* Status bar */
+        .statusbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            letter-spacing: 0.1em;
+            color: var(--text-dim);
+            border-bottom: 1px solid #1c1c1c;
+            padding-bottom: 12px;
+            margin-bottom: 56px;
+            opacity: 0;
+            animation: fadeIn 1s ease-out forwards;
+        }
+
+        .statusbar .live {
+            color: var(--neon-pink);
+        }
+
+        .statusbar .dot {
+            display: inline-block;
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--neon-pink);
+            margin-right: 6px;
+            box-shadow: 0 0 8px var(--neon-pink);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.35; }
+        }
+
+        /* Hero Section */
+        .hero {
+            margin-bottom: 120px;
+            opacity: 0;
+            animation: fadeIn 1s ease-out forwards;
+        }
+
+        .hero-top {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+            margin-bottom: 24px;
+        }
+
+        .profile-photo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #222;
+            box-shadow: 0 0 40px rgba(0, 212, 170, 0.08);
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 640px) {
+            .hero-top {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 20px;
+            }
+
+            .profile-photo {
+                width: 96px;
+                height: 96px;
+            }
+        }
+
+        .hero h1 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(42px, 8vw, 72px);
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, var(--text) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 22px rgba(0, 212, 170, 0.28));
+        }
+
+        .hero .subtitle {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(16px, 3vw, 20px);
+            font-weight: 500;
+            color: var(--text-dim);
+            letter-spacing: 0.05em;
+        }
+
+        .hero .subtitle::after {
+            content: '█';
+            color: var(--accent);
+            animation: blink 1.2s step-end infinite;
+            margin-left: 2px;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Section styling */
+        section {
+            margin-bottom: 80px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        section h2 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(24px, 4vw, 32px);
+            font-weight: 700;
+            margin-bottom: 24px;
+            color: var(--accent);
+            letter-spacing: -0.02em;
+            text-shadow: 0 0 18px rgba(0, 212, 170, 0.25);
+        }
+
+        section h2 .slash {
+            color: var(--neon-pink);
+            text-shadow: 0 0 14px rgba(255, 45, 120, 0.5);
+        }
+
+        section p {
+            margin-bottom: 20px;
+            color: var(--text);
+        }
+
+        section ul {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        section li {
+            margin-bottom: 16px;
+            padding-left: 24px;
+            position: relative;
+            color: var(--text);
+        }
+
+        section li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        strong {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* Links */
+        a {
+            color: var(--accent);
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.2s ease, text-shadow 0.2s ease;
+        }
+
+        a:hover {
+            border-bottom-color: var(--accent);
+            text-shadow: 0 0 12px rgba(0, 212, 170, 0.55);
+        }
+
+        /* Connect section */
+        .connect-links {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+            margin-top: 32px;
+        }
+
+        .connect-links a {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: var(--bg-subtle);
+            border: 1px solid #222;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            border-bottom: 1px solid #222;
+        }
+
+        .connect-links a:hover {
+            background: #1a1a1a;
+            border-color: var(--accent);
+            box-shadow: 0 0 16px rgba(0, 212, 170, 0.25);
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 120px;
+            padding-top: 40px;
+            border-top: 1px solid #222;
+            text-align: center;
+            color: var(--text-dim);
+            font-size: 14px;
+            opacity: 0;
+            animation: fadeIn 1s ease-out 0.5s forwards;
+        }
+
+        footer a {
+            color: var(--text-dim);
+        }
+
+        footer a:hover {
+            color: var(--accent);
+        }
+
+        footer .sig {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            letter-spacing: 0.1em;
+            color: var(--neon-pink);
+            opacity: 0.8;
+        }
+
+        /* Mobile adjustments */
+        @media (max-width: 640px) {
+            .container {
+                padding: 24px 20px 40px;
+            }
+
+            section {
+                margin-bottom: 60px;
+            }
+
+            .hero {
+                margin-bottom: 80px;
+            }
+
+            .connect-links {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .connect-links a {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="statusbar">
+            <span>◤ LIVEINK.MD</span>
+            <span class="live"><span class="dot"></span>ONLINE</span>
+        </div>
+
+        <header class="hero">
+            <div class="hero-top">
+                <img src="profile.jpg" alt="Kevin Li" class="profile-photo">
+                <div>
+                    <h1>Kevin Li</h1>
+                    <p class="subtitle">builder / founder / judoka</p>
+                </div>
+            </div>
+        </header>
+
+        <section id="now">
+            <h2><span class="slash">//</span> Now</h2>
+            <ul>
+                <li>Building <strong><a href="https://askjo.ai" target="_blank" rel="noopener">jo</a></strong>, an AI assistant that actually works the way you think — think Clawdbot/OpenClaw, but built from everything I've learned across two YC companies.</li>
+                <li>Training for <strong>black belt in judo</strong>. Currently brown belt, next competition March 2027. My tokui-waza is tai otoshi.</li>
+                <li>Living in <strong><a href="https://en.wikipedia.org/wiki/Alameda,_California" target="_blank" rel="noopener">Alameda, CA</a></strong> with my 10-year-old daughter Kery and family.</li>
+                <li>Playing Wild Rift and Path of Exile 2 when I should be sleeping.</li>
+            </ul>
+        </section>
+
+        <section id="story">
+            <h2><span class="slash">//</span> Story</h2>
+            <p>I'm a <strong><a href="https://linkedin.com/in/liveink" target="_blank" rel="noopener">two-time YC founder</a></strong> with 15+ years in growth marketing. Before jo, I co-founded <strong><a href="https://www.bizjournals.com/sanfrancisco/news/2023/05/08/sfbt-digest-monday-farmstead.html" target="_blank" rel="noopener">Farmstead</a></strong> (YC S16) — an AI-powered "ghost grocer" delivering groceries in under 60 minutes from small-format micro-warehouse hubs.</p>
+            <p>We used machine learning for demand forecasting and kept food waste under <strong>5%</strong> — supermarkets average around 35%. It started as a Nextdoor post in Mountain View offering weekly milk, eggs, yogurt, and bread. Two hundred replies in two days. Then COVID hit, orders went <strong>10x</strong>, and we scaled to a $10M+ run rate across five markets before winding down in 2023.</p>
+            <p><a href="https://ycpedia.org/liveink" target="_blank" rel="noopener">→ Full dossier on YCpedia</a></p>
+        </section>
+
+        <section id="building">
+            <h2><span class="slash">//</span> Building</h2>
+            <p>I'm a two-time YC founder, and <strong><a href="https://askjo.ai" target="_blank" rel="noopener">jo</a></strong> is my current focus — an AI assistant product that understands context, takes action, and doesn't get in your way.</p>
+            <p>I've spent years building products that people actually use. Now I'm building the assistant I wish I had: proactive, reliable, and genuinely helpful.</p>
+            <p>Also building AI agents and thinking a lot about how humans and AI should work together.</p>
+        </section>
+
+        <section id="connect">
+            <h2><span class="slash">//</span> Connect</h2>
+            <div class="connect-links">
+                <a href="https://x.com/liveink" target="_blank" rel="noopener">
+                    <span>𝕏</span> @liveink
+                </a>
+                <a href="https://linkedin.com/in/liveink" target="_blank" rel="noopener">
+                    <span>in</span> LinkedIn
+                </a>
+                <a href="https://ycpedia.org/liveink" target="_blank" rel="noopener">
+                    <span>📖</span> YCpedia dossier
+                </a>
+            </div>
+        </section>
+
+        <footer>
+            <p>
+                This is a <a href="https://nownownow.com/about" target="_blank" rel="noopener">/now page</a>, inspired by <a href="https://sive.rs/now" target="_blank" rel="noopener">Derek Sivers</a>.
+            </p>
+            <p style="margin-top: 12px; opacity: 0.6;">Last updated: September 2026</p>
+            <p class="sig" style="margin-top: 12px;">◤ END OF TRANSMISSION ◢</p>
+        </footer>
+    </div>
+
+    <script>
+        // Intersection Observer for scroll-based fade-in
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all sections
+        document.querySelectorAll('section').forEach(section => {
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>
