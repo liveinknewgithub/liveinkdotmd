@@ -68,6 +68,31 @@
             z-index: 50;
         }
 
+        /* Full-bleed hero video */
+        .hero-video-wrap {
+            position: relative;
+            width: 100%;
+            background: #000;
+            opacity: 0;
+            animation: fadeIn 1s ease-out forwards;
+        }
+
+        .hero-video {
+            display: block;
+            width: 100%;
+            max-height: 72vh;
+            aspect-ratio: 16 / 9;
+            object-fit: cover;
+            -webkit-mask-image: linear-gradient(to bottom, black 78%, transparent 100%);
+            mask-image: linear-gradient(to bottom, black 78%, transparent 100%);
+        }
+
+        @media (max-width: 640px) {
+            .hero-video {
+                max-height: 42vh;
+            }
+        }
+
         .container {
             max-width: 680px;
             margin: 0 auto;
@@ -348,6 +373,12 @@
 </head>
 <body>
     <!-- source: github.com/liveinknewgithub/liveinkdotmd -->
+    <div class="hero-video-wrap">
+        <video id="hero-video" class="hero-video" autoplay muted loop playsinline preload="auto"
+               poster="hero-poster.jpg" disablepictureinpicture aria-label="Liveink hype reel">
+            <source src="hero.mp4" type="video/mp4">
+        </video>
+    </div>
     <div class="container">
         <div class="statusbar">
             <span>◤ LIVEINK.MD</span>
@@ -417,6 +448,16 @@
     </div>
 
     <script>
+        // Hero video: enforce muted autoplay (covers iOS quirks)
+        const heroVideo = document.getElementById('hero-video');
+        if (heroVideo) {
+            heroVideo.muted = true;
+            heroVideo.defaultMuted = true;
+            const tryPlay = () => heroVideo.play().catch(() => {});
+            tryPlay();
+            document.addEventListener('touchend', tryPlay, { once: true });
+        }
+
         // Intersection Observer for scroll-based fade-in
         const observerOptions = {
             threshold: 0.1,
