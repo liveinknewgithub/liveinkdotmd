@@ -75,28 +75,52 @@
             z-index: 50;
         }
 
-        /* Full-bleed hero video */
-        .hero-video-wrap {
+        /* Scroll-driven video stage: small frame -> fullscreen -> fade out */
+        .video-stage {
             position: relative;
-            width: 100%;
-            background: #000;
+            height: 320vh;
+        }
+
+        .video-sticky {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            height: 100dvh;
+            overflow: hidden;
             opacity: 0;
-            animation: fadeIn 1s ease-out forwards;
+            animation: fadeIn 1s ease-out 0.2s forwards;
         }
 
         .hero-video {
             display: block;
-            width: 100%;
-            max-height: 72vh;
+            width: min(560px, 86vw);
+            margin: 24px auto 0;
             aspect-ratio: 16 / 9;
             object-fit: cover;
-            -webkit-mask-image: linear-gradient(to bottom, black 78%, transparent 100%);
-            mask-image: linear-gradient(to bottom, black 78%, transparent 100%);
+            border-radius: 18px;
+            border: 1px solid #232323;
+            box-shadow: 0 0 60px rgba(0, 212, 170, 0.12);
+            transform-origin: center center;
+            will-change: transform, opacity, border-radius;
+            pointer-events: none;
         }
 
         @media (max-width: 640px) {
-            .hero-video {
-                max-height: 42vh;
+            .video-stage {
+                height: 260vh;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .video-stage {
+                height: auto;
+            }
+
+            .video-sticky {
+                position: static;
+                height: auto;
+                overflow: visible;
+                padding-bottom: 64px;
             }
         }
 
@@ -380,12 +404,6 @@
 </head>
 <body>
     <!-- source: github.com/liveinknewgithub/liveinkdotmd -->
-    <div class="hero-video-wrap">
-        <video id="hero-video" class="hero-video" autoplay muted loop playsinline preload="auto"
-               poster="hero-poster.jpg" disablepictureinpicture aria-label="Liveink hype reel">
-            <source src="hero.mp4" type="video/mp4">
-        </video>
-    </div>
     <div class="container">
         <div class="statusbar">
             <span>◤ LIVEINK.MD</span>
@@ -401,7 +419,18 @@
                 </div>
             </div>
         </header>
+    </div>
 
+    <div class="video-stage">
+        <div class="video-sticky">
+            <video id="hero-video" class="hero-video" autoplay muted loop playsinline preload="auto"
+                   poster="hero-poster.jpg" disablepictureinpicture aria-label="Liveink hype reel">
+                <source src="hero.mp4" type="video/mp4">
+            </video>
+        </div>
+    </div>
+
+    <div class="container">
         <section id="now">
             <h2><span class="slash">//</span> Now</h2>
             <ul>
@@ -464,6 +493,70 @@
             tryPlay();
             document.addEventListener('touchend', tryPlay, { once: true });
         }
+
+        // Scroll-driven video: small frame under the hero -> fullscreen -> fade out
+        (() => {
+            const stage = document.querySelector('.video-stage');
+            const vid = document.getElementById('hero-video');
+            if (!stage || !vid) return;
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+            const TOP_PAD = 24;
+            let W0 = 0, H0 = 0, S = 1, VH = 0;
+
+            const easeInOut = t => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+            const clamp01 = t => Math.min(1, Math.max(0, t));
+            const lerp = (a, b, t) => a + (b - a) * t;
+
+            function measure() {
+                const vw = window.innerWidth;
+                VH = window.innerHeight;
+                W0 = Math.min(560, vw * 0.86);
+                H0 = W0 * 9 / 16;
+                S = Math.max(vw / W0, VH / H0) * 1.03;
+                vid.style.width = W0 + 'px';
+            }
+
+            function update() {
+                const r = stage.getBoundingClientRect();
+                const total = r.height - VH;
+                const p = clamp01(-r.top / total);
+
+                // Phase 1: expand + drift to viewport center (p 0 -> 0.6)
+                const e1 = easeInOut(clamp01(p / 0.6));
+                // Phase 2: hold fullscreen, subtle push-in (p 0.6 -> 0.75)
+                const e2 = clamp01((p - 0.6) / 0.15);
+                // Phase 3: fade out (p 0.75 -> 1)
+                const e3 = easeInOut(clamp01((p - 0.75) / 0.25));
+
+                const scale = lerp(1, S, e1) * lerp(1, 1.06, e2);
+                const ty = (VH / 2 - (TOP_PAD + H0 / 2)) * e1;
+                const opacity = 1 - e3;
+                const radius = lerp(18, 0, e1);
+                const frame = 1 - e1;
+
+                vid.style.transform = `translate3d(0, ${ty.toFixed(1)}px, 0) scale(${scale.toFixed(4)})`;
+                vid.style.opacity = opacity.toFixed(3);
+                vid.style.borderRadius = radius.toFixed(1) + 'px';
+                vid.style.borderColor = `rgba(35, 35, 35, ${frame.toFixed(3)})`;
+                vid.style.boxShadow = frame > 0.01
+                    ? `0 0 60px rgba(0, 212, 170, ${(0.12 * frame).toFixed(3)})`
+                    : 'none';
+            }
+
+            let ticking = false;
+            function onScroll() {
+                if (!ticking) {
+                    ticking = true;
+                    requestAnimationFrame(() => { update(); ticking = false; });
+                }
+            }
+
+            measure();
+            update();
+            window.addEventListener('scroll', onScroll, { passive: true });
+            window.addEventListener('resize', () => { measure(); update(); });
+        })();
 
         // Intersection Observer for scroll-based fade-in
         const observerOptions = {
